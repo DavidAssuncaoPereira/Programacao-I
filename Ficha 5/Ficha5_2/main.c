@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 struct avaliacao {
     char nome[50];
@@ -72,6 +73,7 @@ int main() {
     } while(opcao != 0);
 }
 int menu(){
+    int opcao;
         printf("\n1 - Introduzir dados dos estudantes");
         printf("\n2 - Mostrar todas as notas");
         printf("\n3 - Calcular a media da turma");
@@ -85,10 +87,13 @@ int menu(){
 }
 int lerQuantidadeAvaliados() {
     int n;
+    bool pass = false;
     do{
     printf("Insere o numero de estudantes: ");
     scanf(" %d", &n);
-    }while(n>25 || n<0);
+    if(n>25 || n<0)
+        pass=true;
+    }while(pass);
     return n;
 }
 
@@ -129,7 +134,7 @@ void notasPositivas(struct avaliacao turma[], int n) {
 }
 void alteraNota(struct avaliacao turma[], int n){
     int alt;
-    printf("Insere o numero do aluno que quer aleterar: ")
+    printf("Insere o numero do aluno que quer aleterar: ");
     scanf(" %d",&alt);
     alt--;
     printf("Insere a nota: ");
