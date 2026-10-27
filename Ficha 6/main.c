@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
-// a) Estrutura dos estudantes
+
 struct tipoEstudantes {
     int numero;
     char nome[50];
     char dataValidacao[50];
-    int nota; // -1 indica que ainda nao foi avaliado
+    int nota;
 };
 
 int lerinteiro();

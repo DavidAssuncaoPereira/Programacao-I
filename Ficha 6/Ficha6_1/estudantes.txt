@@ -1,0 +1,5 @@
+LISTA DE ESTUDANTES (Total: 2)
+-------------------------------------------------------------
+Numero: 1 | Nome: David | Data Avaliacao: 11/12/2026 | Nota: 20
+Numero: 2 | Nome: Afonso | Data Avaliacao: 11/12/2026 | Nota: 0
+-------------------------------------------------------------
