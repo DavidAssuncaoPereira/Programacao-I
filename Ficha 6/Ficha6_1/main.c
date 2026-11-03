@@ -201,7 +201,7 @@ void lerNotas(tipoEstudantes estudantes[], int quant)
             int diasmes;
             if(estudantes[i].mes == 2)
             {
-                if((estudantes[i].ano % 4 == 0 && estudantes[i].ano % 0 != 0) || estudantes[i].ano % 400 == 0)
+                if((estudantes[i].ano % 4 == 0 && estudantes[i].ano % 100 != 0) || estudantes[i].ano % 400 == 0)
                     diasmes = 29;
                 else
                     diasmes = 28;
@@ -215,178 +215,179 @@ void lerNotas(tipoEstudantes estudantes[], int quant)
                 printf("Insere o dia da avaliacao: ");
                 estudantes[i].dia = lerinteiro();
             }
-            while(estudantes[i].dia < 1 || estudantes>diasmes);
+            while(estudantes[i].dia < 1 || estudantes[i].dia >diasmes);
 
         }
     }
+}
 
-    void mostrarDados(tipoEstudantes estudantes[], int quant)
+void mostrarDados(tipoEstudantes estudantes[], int quant)
+{
+    int i;
+
+    if (quant == 0)
     {
-        int i;
-
-        if (quant == 0)
-        {
-            printf("\nNao ha estudantes registados.\n");
-            return;
-        }
-
-        printf("\n--- DADOS DOS ESTUDANTES ---\n");
-        for (i = 0; i < quant; i++)
-        {
-            printf("Numero: %-5d | Nome: %-15s | ", estudantes[i].numero, estudantes[i].nome);
-            if (estudantes[i].nota >= 0)
-            {
-                printf("Data Avaliacao: %02d/%02d/%04d | Nota: %d\n",
-                       estudantes[i].dia, estudantes[i].mes, estudantes[i].ano, estudantes[i].nota);
-            }
-            else
-            {
-                printf("Data Avaliacao: --/--/---- | Nota: Sem Avaliacao\n");
-            }
-        }
+        printf("\nNao ha estudantes registados.\n");
+        return;
     }
 
-    int acrescentaAvaliado(tipoEstudantes estudantes[], int quant)
+    printf("\n--- DADOS DOS ESTUDANTES ---\n");
+    for (i = 0; i < quant; i++)
     {
-        if (quant >= 100)
+        printf("Numero: %-5d | Nome: %-15s | ", estudantes[i].numero, estudantes[i].nome);
+        if (estudantes[i].nota >= 0)
         {
-            printf("Limite maximo de 100 estudantes atingido!\n");
-            return quant;
-        }
-
-        estudantes[quant] = lerDadosEstudante(estudantes, quant);
-
-        quant++;
-        printf("Estudante inserido com sucesso!\n");
-        return quant;
-    }
-
-    char menu(int inseridos, int avaliados, float percPositivas)
-    {
-        char op;
-
-        printf("\n**************************************************\n");
-        printf("** Menu Principal                               **\n");
-        printf("**************************************************\n");
-        printf("** Estudantes Inseridos: %-22d **\n", inseridos);
-        printf("** Estudantes Avaliados: %-22d **\n", avaliados);
-        printf("** Notas Positivas (%%): %-23.2f **\n", percPositivas);
-        printf("**************************************************\n");
-        printf("  A - Acrescenta Estudante\n");
-        printf("  I - Introducao Notas\n");
-        printf("  M - Mostrar Dados\n");
-        printf("  G - Gravar dados em ficheiros\n");
-        printf("  L - Ler dados de ficheiro\n");
-        printf("  F - Fim\n");
-        printf("Opcao--> ");
-
-        op = lerchar();
-        return op;
-    }
-
-    void contas(tipoEstudantes estudantes[], int quant, int *avaliados, float *percPositivas)
-    {
-        int i;
-        int contaAvaliados = 0;
-        int contaPositivas = 0;
-
-        for (i = 0; i < quant; i++)
-        {
-            if (estudantes[i].nota >= 0)
-            {
-                contaAvaliados++;
-                if (estudantes[i].nota >= 10)
-                {
-                    contaPositivas++;
-                }
-            }
-        }
-
-        *avaliados = contaAvaliados;
-
-        if (contaAvaliados > 0)
-        {
-            *percPositivas = ((float)contaPositivas / contaAvaliados) * 100.0;
+            printf("Data Avaliacao: %02d/%02d/%04d | Nota: %d\n",
+                   estudantes[i].dia, estudantes[i].mes, estudantes[i].ano, estudantes[i].nota);
         }
         else
         {
-            *percPositivas = 0.0;
+            printf("Data Avaliacao: --/--/---- | Nota: Sem Avaliacao\n");
         }
-    }
-
-    void gravaFicheiroBinario(tipoEstudantes estudantes[], int quant)
-    {
-        FILE *f = fopen("estudantes.dat", "wb");
-
-        if (f == NULL)
-        {
-            printf("Erro ao abrir ficheiro binario para gravacao!\n");
-            return;
-        }
-
-        fwrite(&quant, sizeof(int), 1, f);
-        fwrite(estudantes, sizeof(tipoEstudantes), quant, f);
-
-        fclose(f);
-        printf("Dados gravados com sucesso em 'estudantes.dat'!\n");
-    }
-
-    void gravaFicheiroTexto(tipoEstudantes estudantes[], int quant)
-    {
-        int i;
-        FILE *f = fopen("estudantes.txt", "w");
-
-        if (f == NULL)
-        {
-            printf("Erro ao abrir ficheiro de texto para escrita!\n");
-            return;
-        }
-
-        fprintf(f, "LISTA DE ESTUDANTES (Total: %d)\n", quant);
-        fprintf(f, "-------------------------------------------------------------\n");
-
-        for (i = 0; i < quant; i++)
-        {
-            if (estudantes[i].nota >= 0)
-            {
-                fprintf(f, "Numero: %d | Nome: %s | Data Avaliacao: %02d/%02d/%d | Nota: %d\n",
-                        estudantes[i].numero,
-                        estudantes[i].nome,
-                        estudantes[i].dia,
-                        estudantes[i].mes,
-                        estudantes[i].ano,
-                        estudantes[i].nota);
-            }
-            else
-            {
-                fprintf(f, "Numero: %d | Nome: %s | Data Avaliacao: Sem Avaliacao | Nota: Sem Avaliacao\n",
-                        estudantes[i].numero,
-                        estudantes[i].nome);
-            }
-        }
-
-        fprintf(f, "-------------------------------------------------------------\n");
-        fclose(f);
-
-        printf("Dados exportados com sucesso em estudantes.txt !\n");
-    }
-
-    int leFicheiroBinario(tipoEstudantes estudantes[])
-    {
-        int quant = 0;
-        FILE *f = fopen("estudantes.dat", "rb");
-
-        if (f == NULL)
-        {
-            printf("Erro: Ficheiro binario 'estudantes.dat' nao encontrado!\n");
-            return 0;
-        }
-
-        fread(&quant, sizeof(int), 1, f);
-        fread(estudantes, sizeof(tipoEstudantes), quant, f);
-
-        fclose(f);
-        printf("Lidos %d estudantes com sucesso!\n", quant);
-        return quant;
     }
 }
+
+int acrescentaAvaliado(tipoEstudantes estudantes[], int quant)
+{
+    if (quant >= 100)
+    {
+        printf("Limite maximo de 100 estudantes atingido!\n");
+        return quant;
+    }
+
+    estudantes[quant] = lerDadosEstudante(estudantes, quant);
+
+    quant++;
+    printf("Estudante inserido com sucesso!\n");
+    return quant;
+}
+
+char menu(int inseridos, int avaliados, float percPositivas)
+{
+    char op;
+
+    printf("\n**************************************************\n");
+    printf("** Menu Principal                               **\n");
+    printf("**************************************************\n");
+    printf("** Estudantes Inseridos: %-22d **\n", inseridos);
+    printf("** Estudantes Avaliados: %-22d **\n", avaliados);
+    printf("** Notas Positivas (%%): %-23.2f **\n", percPositivas);
+    printf("**************************************************\n");
+    printf("  A - Acrescenta Estudante\n");
+    printf("  I - Introducao Notas\n");
+    printf("  M - Mostrar Dados\n");
+    printf("  G - Gravar dados em ficheiros\n");
+    printf("  L - Ler dados de ficheiro\n");
+    printf("  F - Fim\n");
+    printf("Opcao--> ");
+
+    op = lerchar();
+    return op;
+}
+
+void contas(tipoEstudantes estudantes[], int quant, int *avaliados, float *percPositivas)
+{
+    int i;
+    int contaAvaliados = 0;
+    int contaPositivas = 0;
+
+    for (i = 0; i < quant; i++)
+    {
+        if (estudantes[i].nota >= 0)
+        {
+            contaAvaliados++;
+            if (estudantes[i].nota >= 10)
+            {
+                contaPositivas++;
+            }
+        }
+    }
+
+    *avaliados = contaAvaliados;
+
+    if (contaAvaliados > 0)
+    {
+        *percPositivas = ((float)contaPositivas / contaAvaliados) * 100.0;
+    }
+    else
+    {
+        *percPositivas = 0.0;
+    }
+}
+
+void gravaFicheiroBinario(tipoEstudantes estudantes[], int quant)
+{
+    FILE *f = fopen("estudantes.dat", "wb");
+
+    if (f == NULL)
+    {
+        printf("Erro ao abrir ficheiro binario para gravacao!\n");
+        return;
+    }
+
+    fwrite(&quant, sizeof(int), 1, f);
+    fwrite(estudantes, sizeof(tipoEstudantes), quant, f);
+
+    fclose(f);
+    printf("Dados gravados com sucesso em 'estudantes.dat'!\n");
+}
+
+void gravaFicheiroTexto(tipoEstudantes estudantes[], int quant)
+{
+    int i;
+    FILE *f = fopen("estudantes.txt", "w");
+
+    if (f == NULL)
+    {
+        printf("Erro ao abrir ficheiro de texto para escrita!\n");
+        return;
+    }
+
+    fprintf(f, "LISTA DE ESTUDANTES (Total: %d)\n", quant);
+    fprintf(f, "-------------------------------------------------------------\n");
+
+    for (i = 0; i < quant; i++)
+    {
+        if (estudantes[i].nota >= 0)
+        {
+            fprintf(f, "Numero: %d | Nome: %s | Data Avaliacao: %02d/%02d/%d | Nota: %d\n",
+                    estudantes[i].numero,
+                    estudantes[i].nome,
+                    estudantes[i].dia,
+                    estudantes[i].mes,
+                    estudantes[i].ano,
+                    estudantes[i].nota);
+        }
+        else
+        {
+            fprintf(f, "Numero: %d | Nome: %s | Data Avaliacao: Sem Avaliacao | Nota: Sem Avaliacao\n",
+                    estudantes[i].numero,
+                    estudantes[i].nome);
+        }
+    }
+
+    fprintf(f, "-------------------------------------------------------------\n");
+    fclose(f);
+
+    printf("Dados exportados com sucesso em estudantes.txt !\n");
+}
+
+int leFicheiroBinario(tipoEstudantes estudantes[])
+{
+    int quant = 0;
+    FILE *f = fopen("estudantes.dat", "rb");
+
+    if (f == NULL)
+    {
+        printf("Erro: Ficheiro binario 'estudantes.dat' nao encontrado!\n");
+        return 0;
+    }
+
+    fread(&quant, sizeof(int), 1, f);
+    fread(estudantes, sizeof(tipoEstudantes), quant, f);
+
+    fclose(f);
+    printf("Lidos %d estudantes com sucesso!\n", quant);
+    return quant;
+}
+
